@@ -1,4 +1,5 @@
-Django>=4.2,<5.0
-djangorestframework>=3.14,<4.0
-pytz
-sqlparse
+asgiref==3.11.0
+Django==5.2.8
+evdev==1.9.2
+numpy==2.3.5
+sqlparse==0.5.4
