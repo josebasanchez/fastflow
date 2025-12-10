@@ -38,5 +38,8 @@ python manage.py test
 ```
 
 
-[^1]: Base de datos de desarrollo: SQLite (db.sqlite3)
-[^2]: No subir archivos sensibles ni dependencias (venv/, node_modules/) al repositorio.
+>[!NOTE]
+>Base de datos de desarrollo: SQLite (db.sqlite3)
+
+>[!WARNING]
+>No subir archivos sensibles ni dependencias (venv/, node_modules/) al repositorio.
