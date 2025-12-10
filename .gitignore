@@ -1,26 +1,22 @@
-# Python / Django
-__pycache__/
+backend/venv/
 *.pyc
 *.pyo
 *.pyd
-env/
-venv/
-db.sqlite3
+__pycache__/
+*.so
 *.log
 *.pot
 *.py[cod]
 *.sqlite3
-*.coverage
-*.egg-info/
-dist/
-*.env
-
-# Node / Frontend
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# IDEs / OS
+db.sqlite3
+media/
+staticfiles/
+*/migrations/*.py
+!*/migrations/__init__.py
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
 .DS_Store
+Thumbs.db
+.env
