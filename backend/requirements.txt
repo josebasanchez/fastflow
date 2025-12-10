@@ -6,3 +6,5 @@ numpy==2.3.5
 setuptools==80.9.0
 sqlparse==0.5.4
 wheel==0.45.1
+djangorestframework==3.16.1
+django-cors-headers=4.9.0
