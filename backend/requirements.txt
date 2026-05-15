@@ -1,0 +1,29 @@
+asgiref==3.11.0
+Django==4.2.26
+djangorestframework==3.16.1
+django-cors-headers==4.9.0
+gunicorn==23.0.0
+whitenoise==6.9.0
+sqlparse==0.5.4
+tzdata==2026.1
+
+PyMySQL==1.1.1
+cryptography==45.0.4
+mysqlclient==2.2.7; platform_system != "Windows"
+
+evdev==1.9.2; platform_system == "Linux"
+
+djangorestframework-simplejwt==5.5.0
+
+redis==5.0.1
+django-redis==5.4.0
+
+# HTTP (webhooks)
+requests==2.32.3
+
+# ML
+numpy<2
+scikit-learn==1.4.2
+
+graphene-django==3.2.0
+celery==5.3.4
