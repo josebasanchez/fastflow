@@ -30,7 +30,7 @@ function getCategory(plato) {
   return found ? found.id : "otros";
 }
 
-export default function ReservaCliente({ auth, onRequireLogin, platos, state, setState, onNextStep, dietaFiltros, setDietaFiltros, onRate, onComment, onVote, comentariosByPlato, selectedMesa, onBackToMesas, loadCommentsPage }) {
+export default function ReservaCliente({ auth, onRequireLogin, platos, state, setState, onNextStep, dietaFiltros, setDietaFiltros, onRate, onComment, onVote, comentariosByPlato, selectedMesa, onBackToMesas, loadCommentsPage, onAddToCart }) {
   const [activeCategory, setActiveCategory] = useState("burgers");
   const [draftComments, setDraftComments] = useState({});
   const [draftRatings, setDraftRatings] = useState({});
@@ -53,6 +53,7 @@ export default function ReservaCliente({ auth, onRequireLogin, platos, state, se
       ? state.pedidos.map((item) => (item.plato_id === platoId ? { ...item, cantidad: item.cantidad + 1 } : item))
       : [...state.pedidos, { plato_id: platoId, cantidad: 1 }];
     setState({ ...state, pedidos: next });
+    if (onAddToCart) onAddToCart();  // ← añadir esta línea
   }
 
   function updateQty(platoId, delta) {

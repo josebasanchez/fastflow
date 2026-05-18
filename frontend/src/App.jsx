@@ -74,7 +74,7 @@ function RoleRoute({ auth, roles, children }) {
   return children;
 }
 
-function ClientPage({ auth, onRequireLogin, mesas, platos, mesasFiltros, setMesasFiltros, reservaState, setReservaState, crearReservaCliente, dietaFiltros, setDietaFiltros, onRate, onComment, onVote, comentariosByPlato, occupiedSlotsByMesa }) {
+function ClientPage({ auth, onRequireLogin, mesas, platos, mesasFiltros, setMesasFiltros, reservaState, setReservaState, crearReservaCliente, dietaFiltros, setDietaFiltros, onRate, onComment, onVote, comentariosByPlato, occupiedSlotsByMesa, loadCommentsPage, onSuccess }) {
   const [step, setStep] = useState(1);
   const selectedMesa = mesas.find((m) => m.id === Number(reservaState.mesa_id));
   const total = reservaState.pedidos.reduce((acc, item) => {
@@ -135,6 +135,7 @@ function ClientPage({ auth, onRequireLogin, mesas, platos, mesasFiltros, setMesa
           selectedMesa={selectedMesa}
           onBackToMesas={() => setStep(1)}
           loadCommentsPage={loadCommentsPage}
+          onAddToCart={() => onSuccess({ msg: "Producto añadido al carrito" })}
         />
       ) : null}
       {step === 3 ? (
@@ -200,8 +201,7 @@ export default function App() {
   const location = useLocation();
   const [auth, setAuth] = useState(() => JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"));
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
+  const [success, setSuccess] = useState(null);
   const [mesasFiltros, setMesasFiltros] = useState({ fecha: todayInput(), hora: "", capacidad: 2 });
   const [mesas, setMesas] = useState([]);
   const [occupiedSlotsByMesa, setOccupiedSlotsByMesa] = useState({});
@@ -336,7 +336,7 @@ export default function App() {
     await buscarMesas();
     setReservaState((prev) => ({ ...prev, pedidos: [], referencia_pago: "", mesa_id: "" }));
     setError("");
-    setSuccess("Reserva creada correctamente");
+    setSuccess({ msg: "Reserva creada correctamente" })
   }
 
   // Load a page of comments for a plato (used by child components)
@@ -404,7 +404,7 @@ export default function App() {
 
   useEffect(() => {
     if (!success) return;
-    const handle = setTimeout(() => setSuccess(""), 4000);
+    const handle = setTimeout(() => setSuccess(null), 3000);
     return () => clearTimeout(handle);
   }, [success]);
 
@@ -481,7 +481,11 @@ export default function App() {
   }, [auth, canAccessPrivate, isAdmin]);
 
   useEffect(() => {
-    loadPrivate().catch((e) => setError(String(e)));
+    loadPrivate().catch((e) => {
+      if (!String(e).includes("token_not_valid") && !String(e).includes("Token is expired")) {
+        setError(String(e));
+      }
+    });
   }, [loadPrivate]);
 
   function onLogout() {
@@ -518,6 +522,8 @@ export default function App() {
                 onVote={(comentarioId, tipo) => onVote(comentarioId, tipo).catch((e) => setError(String(e)))}
                 comentariosByPlato={comentariosByPlato}
                 occupiedSlotsByMesa={occupiedSlotsByMesa}
+                loadCommentsPage={loadCommentsPage}
+                onSuccess={(msg) => setSuccess(msg)}
               />
             )
           }
@@ -552,7 +558,13 @@ export default function App() {
         />
         <Route path="*" element={<Navigate to={auth ? getDefaultPathForAuth(auth) : "/cliente"} replace />} />
       </Routes>
-      {success ? <div className="mx-auto mt-3 w-full max-w-7xl rounded-lg bg-emerald-100 px-4 py-3 text-emerald-800">{success}</div> : null}
+      {success ? (
+        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+          <div className="bg-emerald-500 text-white text-lg font-semibold px-8 py-5 rounded-2xl shadow-2xl">
+            {success.msg}
+          </div>
+        </div>
+      ) : null}
       {error ? <div className="mx-auto mt-3 w-full max-w-7xl rounded-lg bg-rose-100 px-4 py-3 text-rose-800">{error}</div> : null}
     </AppShell>
   );

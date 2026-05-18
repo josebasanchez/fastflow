@@ -224,6 +224,7 @@ def private_updates_stream_view(request):
     response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
     response["Cache-Control"] = "no-cache"
     response["X-Accel-Buffering"] = "no"
+    response["Access-Control-Allow-Origin"] = "*"
     return response
 
 
@@ -515,6 +516,7 @@ def cliente_updates_stream_view(request):
     response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
     response["Cache-Control"] = "no-cache"
     response["X-Accel-Buffering"] = "no"
+    response["Access-Control-Allow-Origin"] = "*"
     return response
 
 
