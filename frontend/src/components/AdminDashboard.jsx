@@ -157,17 +157,17 @@ export default function AdminDashboard({
   }
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+    <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-semibold">Dashboard admin</h2>
       </div>
 
       <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-xl bg-slate-50 p-3">Reservas totales: <b>{stats.total_reservas}</b></div>
-        <div className="rounded-xl bg-slate-50 p-3">Reservas hoy: <b>{stats.reservas_hoy}</b></div>
-        <div className="rounded-xl bg-slate-50 p-3">Ingresos: <b>{stats.ingresos_totales} EUR</b></div>
-        <div className="rounded-xl bg-slate-50 p-3">Alertas stock: <b>{stats.alertas_stock}</b></div>
-        <div className="rounded-xl bg-slate-50 p-3">Tiempo medio preparacion: <b>{prepMinutes != null ? `${prepMinutes} min` : "-"}</b></div>
+        <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-950">Reservas totales: <b>{stats.total_reservas}</b></div>
+        <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-950">Reservas hoy: <b>{stats.reservas_hoy}</b></div>
+        <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-950">Ingresos: <b>{stats.ingresos_totales} EUR</b></div>
+        <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-950">Alertas stock: <b>{stats.alertas_stock}</b></div>
+        <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-950">Tiempo medio preparacion: <b>{prepMinutes != null ? `${prepMinutes} min` : "-"}</b></div>
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">

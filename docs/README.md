@@ -104,3 +104,9 @@ Frontend en: http://localhost:3000
 - Error de conexion a MySQL: revisa `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`.
 - Puerto ocupado en backend: cambia puerto con `python manage.py runserver 8001`.
 - Puerto ocupado en frontend: React pedira usar otro puerto automaticamente.
+- `django.db.utils.ProgrammingError: (1146, \"Table 'fastflow.perfiles_usuarios' doesn't exist\")` al ejecutar `python manage.py seed_fastflow`:
+  - Causa tipica: migraciones de `restaurante` no aplicadas (por ejemplo `python manage.py showmigrations restaurante` muestra `(no migrations)` o no aparece `0001_initial`).
+  - Solucion:
+    - Asegura que existen `backend/restaurante/__init__.py` y `backend/restaurante/migrations/__init__.py`.
+    - Ejecuta `python manage.py migrate` y vuelve a lanzar `python manage.py seed_fastflow`.
+  - Si alternas entre Docker y local: asegúrate de ejecutar `migrate` en el mismo entorno/BD donde corres el seed.

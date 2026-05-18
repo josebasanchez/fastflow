@@ -8,6 +8,7 @@ import PagoCliente from "./components/PagoCliente";
 import PedidosCola from "./components/PedidosCola";
 import AdminDashboard from "./components/AdminDashboard";
 import logo from "./assets/logo.jpg";
+import fastflowBanners from "./assets/banners/fastflow_banners.png";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000/restaurante";
 const STORAGE_KEY = "fastflow_auth";
@@ -39,27 +40,42 @@ function getNombreCliente(auth) {
   return auth?.user?.nombre_mostrar || auth?.user?.first_name || auth?.user?.username || "";
 }
 
-function AppShell({ auth, onLogout, children }) {
+function AppShell({ auth, onLogout, onToggleTheme, isDark, children }) {
   const role = normalizeRole(auth?.user);
   return (
-    <main className="min-h-screen bg-[#f5f0e8] p-4 md:p-8">
+    <main className="min-h-screen bg-[#f5f0e8] p-4 text-slate-900 dark:bg-slate-950 dark:text-slate-100 md:p-8">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-4">
-        <header className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-[#d9cdb8]">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="Logo Fast Flow" className="h-12 w-12 rounded-full object-cover ring-2 ring-[#c89a58]" />
+        <header className="relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#d9cdb8] dark:bg-slate-900 dark:ring-slate-800">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${fastflowBanners})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "100% 200%",
+              backgroundPosition: isDark ? "center bottom" : "center top",
+            }}
+          />
+          <div className="relative flex items-center gap-3 p-4">
+            <NavLink to={auth ? getDefaultPathForAuth(auth) : "/cliente"} className="flex items-center gap-3">
+              <img src={logo} alt="Logo Fast Flow" className="h-12 w-12 rounded-full object-cover ring-2 ring-[#c89a58]" />
+            </NavLink>
             <div>
-              <h1 className="text-2xl font-bold text-[#5c3d1e]">Fast Flow</h1>
-              <p className="text-xs text-[#8c6a43]">Llega, come y vete.</p>
-              <p className="text-sm text-[#7a5c3a]">{auth ? `${auth.user.username} · ${role}` : "Invitado"}</p>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Fast Flow</h1>
+              <p className="text-xs text-slate-800 dark:text-slate-300">Llega, come y vete.</p>
+              <p className="text-sm text-slate-800 dark:text-slate-200">{auth ? `${auth.user.username} · ${role}` : "Invitado"}</p>
             </div>
+
+            <nav className="ml-auto flex flex-wrap gap-2 text-sm">
+              <button className="rounded-lg bg-white/70 px-3 py-2 text-[#5c3d1e] ring-1 ring-[#e7dcc7] hover:bg-white dark:bg-slate-800/70 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-800" onClick={onToggleTheme} title="Cambiar tema">
+                {isDark ? "Claro" : "Oscuro"}
+              </button>
+              {!auth ? <NavLink className="rounded-lg bg-[#5c3d1e] px-3 py-2 text-white" to="/auth">Entrar</NavLink> : null}
+              {auth ? <button className="rounded-lg bg-[#5c3d1e] px-3 py-2 text-white" onClick={onLogout}>Salir</button> : null}
+            </nav>
           </div>
-          <nav className="flex flex-wrap gap-2 text-sm">
-            {!auth ? <NavLink className="rounded-lg bg-[#5c3d1e] px-3 py-2 text-white" to="/auth">Entrar</NavLink> : null}
-            {auth ? <button className="rounded-lg bg-[#5c3d1e] px-3 py-2 text-white" onClick={onLogout}>Salir</button> : null}
-          </nav>
         </header>
         {children}
-        <footer className="rounded-2xl bg-white p-4 text-sm text-[#7a5c3a] shadow-sm ring-1 ring-[#d9cdb8]">
+        <footer className="rounded-2xl bg-white p-4 text-sm text-[#7a5c3a] shadow-sm ring-1 ring-[#d9cdb8] dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-800">
           <p><b>Contacto</b> · Tel: 912 345 678 · Email: info@fastflow.es · Dirección: Calle Gran Vía 123, Madrid</p>
         </footer>
       </div>
@@ -74,7 +90,7 @@ function RoleRoute({ auth, roles, children }) {
   return children;
 }
 
-function ClientPage({ auth, onRequireLogin, mesas, platos, mesasFiltros, setMesasFiltros, reservaState, setReservaState, crearReservaCliente, dietaFiltros, setDietaFiltros, onRate, onComment, onVote, comentariosByPlato, occupiedSlotsByMesa, loadCommentsPage, onSuccess }) {
+function ClientPage({ auth, isDark, onRequireLogin, mesas, platos, mesasFiltros, setMesasFiltros, reservaState, setReservaState, crearReservaCliente, dietaFiltros, setDietaFiltros, onRate, onComment, onVote, comentariosByPlato, occupiedSlotsByMesa, loadCommentsPage, onSuccess }) {
   const [step, setStep] = useState(1);
   const selectedMesa = mesas.find((m) => m.id === Number(reservaState.mesa_id));
   const total = reservaState.pedidos.reduce((acc, item) => {
@@ -118,6 +134,7 @@ function ClientPage({ auth, onRequireLogin, mesas, platos, mesasFiltros, setMesa
           state={reservaState}
           setState={setReservaState}
           auth={auth}
+          isDark={isDark}
           onRequireLogin={onRequireLogin}
           onNextStep={() => {
             if (!auth) {
@@ -215,6 +232,11 @@ export default function App() {
     pedido_anticipado: true,
     metodo_pago: "establecimiento",
     referencia_pago: "",
+    tarjeta_numero: "",
+    tarjeta_exp: "",
+    tarjeta_cvv: "",
+    bizum_telefono: "",
+    bizum_codigo: "",
     pedidos: [],
   });
   const [pedidos, setPedidos] = useState([]);
@@ -227,6 +249,22 @@ export default function App() {
   const currentRole = useMemo(() => normalizeRole(auth?.user), [auth]);
   const isAdmin = useMemo(() => currentRole === "administrador", [currentRole]);
   const canAccessPrivate = useMemo(() => currentRole === "empleado" || currentRole === "administrador", [currentRole]);
+  const isDark = useMemo(() => String(auth?.user?.tema || "").toLowerCase() === "dark", [auth]);
+
+  async function toggleTheme() {
+    if (!auth) {
+      setError("Inicia sesión para cambiar el tema");
+      return;
+    }
+    const nextTema = isDark ? "light" : "dark";
+    await apiWithRefresh(API_BASE_URL, "auth/theme/", { method: "POST", body: { tema: nextTema } }, auth, setAuth, STORAGE_KEY);
+    setAuth((prev) => {
+      if (!prev) return prev;
+      const merged = { ...prev, user: { ...prev.user, tema: nextTema } };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      return merged;
+    });
+  }
 
   async function onLogin(form) {
     const data = await requestApi(API_BASE_URL, "auth/login/", { method: "POST", body: { username: form.username, password: form.password } });
@@ -332,11 +370,26 @@ export default function App() {
       pedidos: reservaState.pedidos.map((item) => ({ plato_id: Number(item.plato_id), cantidad: Number(item.cantidad) })),
     };
 
-    await apiWithRefresh(API_BASE_URL, "cliente/reserva/", { method: "POST", body: payload }, auth, setAuth, STORAGE_KEY);
+    const resp = await apiWithRefresh(API_BASE_URL, "cliente/reserva/", { method: "POST", body: payload }, auth, setAuth, STORAGE_KEY);
     await buscarMesas();
-    setReservaState((prev) => ({ ...prev, pedidos: [], referencia_pago: "", mesa_id: "" }));
+    setReservaState((prev) => ({
+      ...prev,
+      pedidos: [],
+      referencia_pago: "",
+      mesa_id: "",
+      tarjeta_numero: "",
+      tarjeta_exp: "",
+      tarjeta_cvv: "",
+      bizum_telefono: "",
+      bizum_codigo: "",
+    }));
     setError("");
-    setSuccess({ msg: "Reserva creada correctamente" })
+    const pagoEstado = resp?.pago?.estado;
+    if (pagoEstado === "aprobado") setSuccess({ msg: "Pago aprobado · Reserva creada correctamente" });
+    else if (pagoEstado === "rechazado") setSuccess({ msg: "Pago rechazado · Reserva creada (pago no completado)" });
+    else if (pagoEstado === "pendiente") setSuccess({ msg: "Pago pendiente · Reserva creada correctamente" });
+    else setSuccess({ msg: "Reserva creada correctamente" });
+    return resp;
   }
 
   // Load a page of comments for a plato (used by child components)
@@ -495,7 +548,8 @@ export default function App() {
   }
 
   return (
-    <AppShell auth={auth} onLogout={onLogout}>
+    <div className={isDark ? "dark" : ""}>
+      <AppShell auth={auth} isDark={isDark} onToggleTheme={() => toggleTheme().catch((e) => setError(String(e)))} onLogout={onLogout}>
       <Routes>
         <Route path="/" element={<Navigate to={auth ? getDefaultPathForAuth(auth) : "/cliente"} replace />} />
         <Route path="/auth" element={<AuthPage auth={auth} onLogin={(f) => onLogin(f).catch((e) => setError(String(e)))} onRegister={(f) => onRegister(f).catch((e) => setError(String(e)))} />} />
@@ -508,6 +562,7 @@ export default function App() {
               <ClientPage
                 mesas={mesas}
                 auth={auth}
+                isDark={isDark}
                 onRequireLogin={() => navigate("/auth", { state: { from: { pathname: "/cliente" } } })}
                 platos={platos}
                 mesasFiltros={mesasFiltros}
@@ -566,6 +621,7 @@ export default function App() {
         </div>
       ) : null}
       {error ? <div className="mx-auto mt-3 w-full max-w-7xl rounded-lg bg-rose-100 px-4 py-3 text-rose-800">{error}</div> : null}
-    </AppShell>
+      </AppShell>
+    </div>
   );
 }

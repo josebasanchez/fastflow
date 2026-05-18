@@ -15,12 +15,12 @@ function getUrgencyLevel(minutesLeft) {
 }
 
 function getCardClass(estado, urgencyLevel) {
-  if (estado === "listo") return "border-emerald-300 bg-emerald-50";
-  if (urgencyLevel === "late") return "border-slate-900 bg-slate-900 text-white";
-  if (urgencyLevel === "lt1h") return "border-rose-300 bg-rose-50";
-  if (urgencyLevel === "lt2h") return "border-orange-300 bg-orange-50";
-  if (urgencyLevel === "lt3h") return "border-amber-300 bg-amber-50";
-  return "border-slate-200 bg-white";
+  if (estado === "listo") return "border-emerald-300 bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950/40";
+  if (urgencyLevel === "late") return "border-slate-900 bg-slate-900 text-white dark:border-slate-700 dark:bg-slate-800";
+  if (urgencyLevel === "lt1h") return "border-rose-300 bg-rose-50 dark:border-rose-900 dark:bg-rose-950/40";
+  if (urgencyLevel === "lt2h") return "border-orange-300 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/40";
+  if (urgencyLevel === "lt3h") return "border-amber-300 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40";
+  return "border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950";
 }
 
 function getStateRank(estado) {
@@ -82,9 +82,9 @@ export default function PedidosCola({ pedidos = [], onStartPreparing, onMarkRead
   }
 
   return (
-    <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+    <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
       <h2 className="text-lg font-semibold">Cola de preparacion por prioridad</h2>
-      <p className="mt-1 text-sm text-slate-600">Ordenado por urgencia de servicio. Los pedidos mas urgentes salen arriba.</p>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Ordenado por urgencia de servicio. Los pedidos mas urgentes salen arriba.</p>
 
       <div className="mt-3 flex flex-wrap gap-2 text-xs">
         <span className="rounded-full bg-slate-900 px-3 py-1 text-white">Fuera de tiempo</span>

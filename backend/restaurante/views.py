@@ -238,7 +238,7 @@ def login_view(request):
         return Response({"detail": "Credenciales invalidas"}, status=status.HTTP_401_UNAUTHORIZED)
 
     refresh = RefreshToken.for_user(user)
-    perfil = getattr(user, "perfil", None)
+    perfil, _ = PerfilUsuario.objects.get_or_create(user=user)
     return Response(
         {
             "access": str(refresh.access_token),
@@ -267,7 +267,7 @@ def register_view(request):
     serializer.is_valid(raise_exception=True)
     user = serializer.save()
     refresh = RefreshToken.for_user(user)
-    perfil = getattr(user, "perfil", None)
+    perfil, _ = PerfilUsuario.objects.get_or_create(user=user)
     return Response(
         {
             "access": str(refresh.access_token),

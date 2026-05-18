@@ -9,7 +9,7 @@ tzdata==2026.1
 
 PyMySQL==1.1.1
 cryptography==45.0.4
-mysqlclient==2.2.7; platform_system != "Windows"
+mysqlclient==2.2.7; platform_system == "Windows"
 
 evdev==1.9.2; platform_system == "Linux"
 
