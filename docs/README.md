@@ -63,8 +63,6 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 Ejecuta migraciones, seed y servidor:
 
 ```bash
-python manage.py makemigrations
-python manage.py makemigrations restaurante
 python manage.py migrate
 python manage.py seed_fastflow
 python manage.py runserver 0.0.0.0:8000
