@@ -509,7 +509,7 @@ def cliente_updates_stream_view(request):
                     "occupied_slots_by_mesa": occupied_by_mesa,
                 }
                 yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
-                time.sleep(5)
+                time.sleep(1)
         except GeneratorExit:
             return
 
