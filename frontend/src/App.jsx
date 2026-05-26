@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { apiWithRefresh, requestApi } from "./api";
 import AuthForms from "./components/AuthForms";
@@ -40,7 +40,7 @@ function getNombreCliente(auth) {
   return auth?.user?.nombre_mostrar || auth?.user?.first_name || auth?.user?.username || "";
 }
 
-function AppShell({ auth, onLogout, onToggleTheme, isDark, children }) {
+function AppShell({ auth, onLogout, isDark, children }) {
   const role = normalizeRole(auth?.user);
   return (
     <main className="min-h-screen bg-[#f5f0e8] p-4 text-slate-900 dark:bg-slate-950 dark:text-slate-100 md:p-8">
@@ -66,9 +66,7 @@ function AppShell({ auth, onLogout, onToggleTheme, isDark, children }) {
             </div>
 
             <nav className="ml-auto flex flex-wrap gap-2 text-sm">
-              <button className="rounded-lg bg-white/70 px-3 py-2 text-[#5c3d1e] ring-1 ring-[#e7dcc7] hover:bg-white dark:bg-slate-800/70 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-800" onClick={onToggleTheme} title="Cambiar tema">
-                {isDark ? "Claro" : "Oscuro"}
-              </button>
+              {auth ? <NavLink className="rounded-lg bg-white/70 px-3 py-2 text-[#5c3d1e] ring-1 ring-[#e7dcc7] hover:bg-white dark:bg-slate-800/70 dark:text-slate-100 dark:ring-slate-700 dark:hover:bg-slate-800" to="/perfil">Perfil</NavLink> : null}
               {!auth ? <NavLink className="rounded-lg bg-[#5c3d1e] px-3 py-2 text-white" to="/auth">Entrar</NavLink> : null}
               {auth ? <button className="rounded-lg bg-[#5c3d1e] px-3 py-2 text-white" onClick={onLogout}>Salir</button> : null}
             </nav>
@@ -211,6 +209,32 @@ function AuthPage({ onLogin, onRegister, auth }) {
     return <Navigate to={from} replace />;
   }
   return <AuthForms onLogin={onLogin} onRegister={onRegister} />;
+}
+
+function PerfilPage({ auth, isDark, onToggleTheme }) {
+  const nombre = auth?.user?.nombre_mostrar || auth?.user?.first_name || auth?.user?.username || "Usuario";
+  const rol = normalizeRole(auth?.user);
+  return (
+    <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+      <h2 className="text-lg font-semibold">Perfil</h2>
+      <div className="mt-4 grid gap-3 text-sm">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
+          <p><b>Nombre:</b> {nombre}</p>
+          <p><b>Usuario:</b> {auth?.user?.username}</p>
+          <p><b>Rol:</b> {rol}</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950">
+          <p><b>Modo actual:</b> {isDark ? "Oscuro" : "Claro"}</p>
+          <button
+            className="mt-2 rounded-lg bg-slate-900 px-3 py-2 text-white dark:bg-slate-100 dark:text-slate-900"
+            onClick={onToggleTheme}
+          >
+            Cambiar a modo {isDark ? "claro" : "oscuro"}
+          </button>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function App() {
@@ -549,10 +573,18 @@ export default function App() {
 
   return (
     <div className={isDark ? "dark" : ""}>
-      <AppShell auth={auth} isDark={isDark} onToggleTheme={() => toggleTheme().catch((e) => setError(String(e)))} onLogout={onLogout}>
+      <AppShell auth={auth} isDark={isDark} onLogout={onLogout}>
       <Routes>
         <Route path="/" element={<Navigate to={auth ? getDefaultPathForAuth(auth) : "/cliente"} replace />} />
         <Route path="/auth" element={<AuthPage auth={auth} onLogin={(f) => onLogin(f).catch((e) => setError(String(e)))} onRegister={(f) => onRegister(f).catch((e) => setError(String(e)))} />} />
+        <Route
+          path="/perfil"
+          element={
+            <RoleRoute auth={auth} roles={["cliente", "empleado", "administrador"]}>
+              <PerfilPage auth={auth} isDark={isDark} onToggleTheme={() => toggleTheme().catch((e) => setError(String(e)))} />
+            </RoleRoute>
+          }
+        />
         <Route
           path="/cliente"
           element={
