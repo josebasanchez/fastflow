@@ -1,0 +1,36 @@
+Convencion de nombres para imagenes de platos (.png)
+
+Ruta:
+- frontend/src/assets/platos/
+
+Regla general:
+- El frontend intenta cargar la imagen por nombre del plato.
+- Formato recomendado: nombre_del_plato_en_minusculas.png
+- Quita tildes y simbolos.
+- Los espacios se convierten en "_".
+
+Compatibilidad extra:
+- Tambien funciona sin "_" (por ejemplo: browniechocolate.png).
+
+Nombres esperados para platos actuales:
+- hamburguesa_clasica.png
+- pizza_margarita.png
+- ensalada_cesar.png
+- burger_vegana.png
+- tacos_al_pastor.png
+- sopa_de_miso.png
+- pizza_cuatro_quesos.png
+- ensalada_mediterranea.png
+- burger_doble_bbq.png
+- hamburguesa_bbq_bacon.png
+- hamburguesa_crispy_pollo.png
+- menu_burger_cola.png
+- menu_pizza_agua.png
+- patatas_fries.png
+- alitas_bbq.png
+- nuggets_de_pollo.png
+- cola_lata.png
+- agua_mineral.png
+- cafe_espresso.png
+- zumo_de_naranja.png
+- brownie_chocolate.png
