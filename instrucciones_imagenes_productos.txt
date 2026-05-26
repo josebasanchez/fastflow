@@ -1,0 +1,33 @@
+INSTRUCCIONES PARA IMAGENES DE PRODUCTOS (FASTFLOW)
+
+1) Donde guardar las imagenes
+- Ruta recomendada:
+  frontend/src/assets/platos/
+
+2) Como nombrarlas
+- Usa nombres simples en minusculas y guion bajo, por ejemplo:
+  hamburguesa_bbq_bacon.png
+  pizza_cuatro_quesos.png
+  ensalada_mediterranea.png
+
+3) Como usarlas en el frontend
+- Archivo a editar:
+  frontend/src/components/ReservaCliente.jsx
+
+- Paso A: importar la imagen
+  import hamburguesaBbqBaconImg from "../assets/platos/hamburguesa_bbq_bacon.png";
+
+- Paso B: mapearla en PLATO_IMAGE_MAP
+  hamburguesabbqbacon: hamburguesaBbqBaconImg,
+
+4) Regla de clave en PLATO_IMAGE_MAP
+- La clave debe coincidir con el nombre normalizado del plato:
+  - sin espacios
+  - sin tildes
+  - sin simbolos
+- Ejemplo:
+  "Hamburguesa BBQ Bacon" -> hamburguesabbqbacon
+
+5) Que pasa si no existe imagen para un plato
+- El componente usa una imagen de fallback.
+- Recomendado: anadir siempre una imagen por plato para consistencia visual.
